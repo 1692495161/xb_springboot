@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/form-elements.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/layer.css">
+
+    <title>登录</title>
+    <style>
+        body {
+            background: url("img/bg.jpg") no-repeat fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container myBox" id="app">
+    <div class="col-xs-8 col-xs-offset-4 col-sm-6 col-sm-offset-3 form-box">
+        <div class="form-top">
+            <div class="form-top-left">
+                <h3>小标会议平台</h3>
+                <p>请输入您的信息:</p>
+            </div>
+            <div class="form-top-right">
+                <i class="fa fa-key"></i>
+            </div>
+        </div>
+        <div class="form-bottom">
+            <form role="form" action="html/home.html" method="post" class="login-form" @submit.prevent>
+
+                <!--上面的输入框尽可能不需要外边距，使用row解决-->
+                <div class="row">
+                    <div class="form-group">
+                        <label class="sr-only" for="form-username">Username</label>
+                        <input type="text" name="form-username" v-model="user.username" placeholder="用户名"
+                               class="form-username form-control"
+                               id="form-username">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="form-password">Password</label>
+                        <input type="password" v-model="user.password" name="form-password" placeholder="密码"
+                               class="form-password form-control"
+                               id="form-password">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" v-model="checkCode" name="checkCode" id="checkCode" placeholder="请输入验证码"
+                               style="width: 180px;"/>
+                        <a onclick="document.getElementById('code').src='/generateCode?v='+new Date().getTime()">
+                            <img src="/generateCode" title="看不清点击刷新" id="code"/>
+                        </a>
+                    </div>
+                </div>
+                <!--上面的输入框尽可能不需要外边距，使用row包裹起来解决-->
+
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" v-model="remember" true-value="1" false-value="0"> 记住我
+                    </label>
+                </div>
+                <div style="margin-bottom: 5px">
+                    <button type="button" @click="login" class="btn">登录</button>
+                </div>
+                <div>
+                    <button class="btn" @click="wxLogin">微信扫码登录</button>
+                </div>
+
+                <div class="row">
+                    <div style="padding: 10px 25px">
+                        <div style="display: inline-block;float: left" class="text-left"><a href="forget.html">忘记密码?</a>
+                        </div>
+                        <div style="display: inline-block;float: right" class="text-right"><a
+                                href="register.html">没有账号?</a></div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Javascript -->
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="js/jquery.backstretch.min.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/layer.js"></script>
+<script src="js/vue-2.6.11.js"></script>
+<script src="js/axios-0.19.2.min.js"></script>
+<script src="js/jquery-cookie-1.4.1.js"></script>
+</body>
+</html>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            remember: 0,
+            checkCode: "",
+            user: {
+                username: "",
+                password: ""
+            }
+        },
+        methods: {
+            login: function () {
+
+                if (this.user.username=="" || this.user.password==""){
+                    layer.msg("请输入用户信息");
+                    return;
+                }
+
+                if (this.checkCode==""){
+                    layer.msg("请输入验证码");
+                    return;
+                }
+
+                axios({
+                    url: `/user/login/${this.checkCode}`,
+                    method: 'post',
+                    data: this.user
+                }).then((res) => {
+                    //如果登录成功
+                    if (res.data.success) {
+                        //判断是否勾选了免密,存入cookie,有效期7天
+                        if (this.remember) {
+                            $.cookie("userId", res.data.obj.userId, {path: "/", expires: 7});
+                        }
+
+                        //存入本地缓存
+                        localStorage.setItem("loginUser", JSON.stringify(res.data.obj.loginUser));
+                        //跳转首页
+                        location.href = "/html/home.html"
+                    } else {
+                        layer.msg(res.data.msg);
+                    }
+                }).catch((error)=>{
+                    layer.msg(error.message)
+                })
+            },
+            wxLogin:function () {
+                location.href="/to_wxLogin"
+            }
+        }
+    })
+</script>

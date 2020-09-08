@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Bootstrap CSS-->
+		<link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.css">
+		<!-- Font Awesome CSS-->
+		<link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
+		<!-- Custom Font Icons CSS-->
+		<link rel="stylesheet" href="../css/font.css">
+		<!-- theme stylesheet-->
+		<link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
+		<!-- Custom stylesheet - for your changes-->
+		<link rel="stylesheet" href="../css/custom.css">
+		<link rel="stylesheet" href="../bootstrap/css/bootstrap-select.min.css">
+		<link rel="stylesheet" href="../css/layer.css">
+		<title>个人中心</title>
+
+	</head>
+	<body>
+		<div id="app">
+			<header class="header">
+				<nav class="navbar navbar-expand-lg">
+					<div class="search-panel">
+						<div class="search-inner d-flex align-items-center justify-content-center">
+							<div class="close-btn">Close <i class="fa fa-close"></i></div>
+							<form id="searchForm" action="#">
+								<div class="form-group">
+									<input type="search" name="search" placeholder="What are you searching for...">
+									<button type="submit" class="submit">Search</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="container-fluid d-flex align-items-center justify-content-between">
+						<div class="navbar-header">
+							<!-- Navbar Header--><a href="home.html" class="navbar-brand">
+								<div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">小标</strong><strong>会议平台</strong></div>
+								<div class="brand-text brand-sm"><strong class="text-primary">X</strong><strong>B</strong></div>
+							</a>
+							<!-- Sidebar Toggle Btn-->
+							<button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
+						</div>
+						<div class="right-menu list-inline no-margin-bottom">
+							<!-- Log out -->
+							<div class="list-inline-item logout">
+								<a id="logout" href="javascript:void(0);" @click="logout" class="nav-link"><span class="d-none d-sm-inline">Logout </span></a>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</header>
+
+			<div class="d-flex align-items-stretch">
+				<!-- Sidebar Navigation-->
+				<nav id="sidebar">
+					<!-- Sidebar Header-->
+					<div class="sidebar-header d-flex align-items-center">
+						<div id="avatar" class="avatar"><img :src="user.pic" alt="..."
+															 class="img-fluid rounded-circle"></div>
+						<div class="title">
+							<h1 class="h5">{{user.realName}}</h1>
+							<p>{{user.deptName}}</p>
+						</div>
+					</div>
+					<!-- Sidebar Navidation Menus--><span class="heading">Main</span>
+					<ul class="list-unstyled">
+						<li><a href="home.html"> <i class="icon-home"></i>主页 </a></li>
+						<li><a href="#userDropdown" data-toggle="collapse"> <i class="icon-windows"></i>用户列表</a>
+							<ul id="userDropdown" class="collapse list-unstyled">
+								<li><a href="user.html">查看用户</a></li>
+								<li><a href="my_user.html">我关注的用户</a></li>
+								<li><a href="article.html">发布文章</a></li>
+								<li><a href="article_collect.html">我的收藏</a></li>
+							</ul>
+						</li>
+						<!--<li><a href="login.html"> <i class="icon-logout"></i>Login page </a></li>-->
+
+						<li><a href="#depDropdown" data-toggle="collapse"> <i class="icon-windows2"></i>部门列表</a>
+							<ul id="depDropdown" class="collapse list-unstyled ">
+								<li><a href="department.html">全部部门</a></li>
+								<li><a href="meeting.html">会议系统</a></li>
+							</ul>
+						</li>
+
+					</ul>
+
+				</nav>
+				<!-- Sidebar Navigation end-->
+				<div class="page-content">
+					<div class="page-header">
+						<div class="container-fluid">
+							<h2 class="h5 no-margin-bottom">个人中心</h2>
+						</div>
+					</div>
+					<section class="no-padding-bottom">
+						<!-- Form Elements -->
+						<div class="col-lg-12">
+							<div class="block">
+								<div class="title"><strong>我的头像</strong></div>
+								<div class="avatar"><img :src="user.pic" id='pic' alt="加载中..." style="width: 150px;height: 150px"
+									 class="img-thumbnail rounded-circle">
+								</div>
+								<div style="margin-top: 15px" class="text-left">
+
+									<!-- 真正的文件上传表单 -->
+									<input name="realFile" @change="changePic($event)" type="file" id="picFile" style="display: none" />
+								</div>
+								<div class="title">
+									<br>
+									<p class="h5"><strong>关注数：</strong><span>&nbsp;</span><span>&nbsp;</span><span>{{focusCount}}</span></p>
+									<br>
+									<p class="h5"><strong>被看数：</strong><span>&nbsp;</span><span>&nbsp;</span><span>{{user.look}}</span>
+									</p>
+									<br>
+								</div>
+								<div class="title"><strong>我的数据</strong></div>
+								<div class="block-body">
+									<form class="form-horizontal" @submit.prevent>
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">用户名</label>
+											<div class="col-sm-9">
+												<input type="text" v-model="user.username" value="东方标准" disabled="disabled" class="form-control">
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">真实姓名</label>
+											<div class="col-sm-9">
+												<input type="text" v-model="user.realName" value="东方标准" class="form-control">
+											</div>
+										</div>
+										<div class="line"></div>
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">所属部门</label>
+											<div class="col-sm-9">
+												<select class="selectpicker" v-model="user.deptId" data-live-search="true">
+													<option v-for="dept in deptList" :value="dept.id">{{dept.name}}</option>
+												</select>
+											</div>
+										</div>
+										<div class="line"></div>
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">电话</label>
+											<div class="col-sm-9">
+												<input type="text" v-model="user.phone" value="020-xxxxxxxx" name="password" class="form-control">
+											</div>
+										</div>
+										<div class="line"></div>
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">年龄</label>
+											<div class="col-sm-9">
+												<input type="text" v-model="user.age" placeholder="20" class="form-control">
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">性别 </label>
+											<div class="col-sm-9">
+
+												<div class="i-checks">
+													<input id="radioCustom1" v-model="user.gender" true-value="1" false-value="0" type="radio" value="1" name="gender" class="radio-template">
+													<label for="radioCustom1">男</label>
+													<span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span>
+													<input id="radioCustom2" v-model="user.gender" true-value="0" false-value="1" type="radio" value="0" name="gender" class="radio-template">
+													<label for="radioCustom2">女</label>
+												</div>
+											</div>
+
+
+										</div>
+										<div class="line"></div>
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">注册时间</label>
+											<div class="col-sm-9">
+												<input type="text" disabled="" v-model="user.registerTime" placeholder="2019-10-30 09:30:00" class="form-control">
+											</div>
+										</div>
+										<div class="line"></div>
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">登录时间</label>
+											<div class="col-sm-9">
+												<input type="text" disabled="" v-model="user.loginTime" placeholder="2019-10-30 19:30:00" class="form-control">
+											</div>
+										</div>
+										<div class="line"></div>
+
+										<div class="form-group row">
+											<label class="col-sm-3 form-control-label">是否私密 <br><small class="text-primary">默认为否，可以不设置</small></label>
+											<div class="col-sm-9">
+												<div class="i-checks">
+													<input id="checkboxCustom1" v-model="user.isSecret" true-value="0" false-value="1" type="checkbox" value="" class="checkbox-template">
+													<label for="checkboxCustom1">是否私密</label>
+												</div>
+
+											</div>
+
+
+										</div>
+										<div class="line"></div>
+										<div class="text-center">
+											<input type="submit" @click="submit" class="btn btn-primary" value="保存">
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<footer class="footer">
+						<div class="footer__block block no-margin-bottom">
+							<div class="container-fluid text-center">
+								<p class="no-margin-bottom">Copyright &copy; 2019.Company <a href="#">东方标准</a></p>
+							</div>
+						</div>
+					</footer>
+				</div>
+			</div>
+		</div>
+		<!-- JavaScript files-->
+		<script src="../vendor/jquery/jquery.min.js"></script>
+		<script src="../bootstrap/js/bootstrap-select.min.js"></script>
+		<script src="../vendor/popper.js/umd/popper.min.js"></script>
+		<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../vendor/jquery.cookie/jquery.cookie.js"></script>
+		<script src="../vendor/chart.js/Chart.min.js"></script>
+		<script src="../vendor/jquery-validation/jquery.validate.min.js"></script>
+		<script src="../js/charts-home.js"></script>
+		<script src="../js/front.js"></script>
+		<script src="../js/custom.js"></script>
+		<script src="../js/layer.js"></script>
+		<script src="../js/vue-2.6.11.js"></script>
+		<script src="../js/axios-0.19.2.min.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$("#pic").click(function() {
+
+					$("#picFile").click();
+
+				})
+				/*$('#picFile').change(function() {
+					layer.msg('上传成功');
+				});*/
+			})
+		</script>
+	</body>
+</html>
+<script>
+	new Vue({
+		el:'#app',
+		data:{
+			user:JSON.parse(localStorage.getItem("loginUser")),
+			deptList:{},
+			focusCount:0,  //关注数
+		},
+		methods:{
+			//查询出所有的部门
+			findDeptAll:function () {
+				axios.get("/dept").then((res)=>{
+					if (res.data.success){
+						this.deptList=res.data.obj;
+					}
+				}).catch((error)=>{layer.msg(error.message)})
+			},
+			//查询我的被关注数
+			detail() {
+				axios.get(`/user/${this.user.id}`).then(res => {
+					if (res.data.success) {
+						this.focusCount = res.data.obj.focusCount;
+					}
+				})
+			},
+			//保存
+			submit: function () {
+				axios.put(`/user/${this.user.id}`,this.user).then((res)=>{
+					if (res.data.success){
+						//更新本地缓存
+						localStorage.setItem("loginUser",JSON.stringify(res.data.obj));
+						this.user=res.data.obj;
+						layer.msg(res.data.msg);
+					}
+				})
+			},
+
+			//更新头像
+			changePic:function (event) {
+				let formData = new FormData();
+
+				//往表单里追加文件
+				// formData.append("picFile",event.target.files[0])
+				formData.append("picFile",document.getElementById("picFile").files[0])
+				console.log(document.getElementById("picFile").files);
+
+				axios({
+					url:'/user/changePic',
+					data:formData,
+					method:'post',
+					headers: {'Content-Type':'multipart/form-data'}
+				}).then((res)=>{
+					if (res.data.success){
+						//更新登录用户的头像路径
+						this.user.pic = res.data.obj;
+						// 更新localStorage中的图片地址
+						localStorage.setItem("loginUser",JSON.stringify(this.user));
+					}
+				})
+				// 无论上传成功还是失败都把文件输入框置空
+				event.target.value="";
+			},
+			//退出登录
+			logout:function () {
+				axios.post("/user/logout").then((res) => {
+					if (res.data.success){
+						//清除本地缓存
+						localStorage.removeItem("userId");
+						localStorage.removeItem("loginUser");
+						//清空cookie
+						$.removeCookie("userId",{path:"/"});
+						//跳转登录界面
+						location.href="/index.html";
+					}
+				})
+			}
+		},
+		created:function () {
+			this.findDeptAll();
+		}
+	})
+</script>

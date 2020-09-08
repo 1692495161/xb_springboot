@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
+    <!-- Custom Font Icons CSS-->
+    <link rel="stylesheet" href="../css/font.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="../css/layer.css">
+    <title>部门</title>
+
+</head>
+<body>
+<div id="app">
+    <header class="header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="search-panel">
+                <div class="search-inner d-flex align-items-center justify-content-center">
+                    <div class="close-btn">Close <i class="fa fa-close"></i></div>
+                    <form id="searchForm" action="#">
+                        <div class="form-group">
+                            <input type="search" name="search" placeholder="What are you searching for...">
+                            <button type="submit" class="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+                <div class="navbar-header">
+                    <!-- Navbar Header--><a href="home.html" class="navbar-brand">
+                    <div class="brand-text brand-big visible text-uppercase"><strong
+                            class="text-primary">小标</strong><strong>会议平台</strong></div>
+                    <div class="brand-text brand-sm"><strong class="text-primary">X</strong><strong>B</strong></div>
+                </a>
+                    <!-- Sidebar Toggle Btn-->
+                    <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
+                </div>
+                <div class="right-menu list-inline no-margin-bottom">
+                    <!-- Log out -->
+                    <div class="list-inline-item logout">
+                        <a id="logout" href="javascript:void(0);" @click="logout" class="nav-link"><span
+                                class="d-none d-sm-inline">Logout </span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="d-flex align-items-stretch">
+        <!-- Sidebar Navigation-->
+        <nav id="sidebar">
+            <!-- Sidebar Header-->
+            <div class="sidebar-header d-flex align-items-center">
+                <div id="avatar" class="avatar"><img :src="loginUser.pic" alt="..."
+                                                     class="img-fluid rounded-circle"></div>
+                <div class="title">
+                    <h1 class="h5">{{loginUser.realName}}</h1>
+                    <p>{{loginUser.deptName}}</p>
+                </div>
+            </div>
+            <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
+            <ul class="list-unstyled">
+                <li><a href="home.html"> <i class="icon-home"></i>主页 </a></li>
+                <li><a href="#userDropdown" data-toggle="collapse"> <i class="icon-windows"></i>用户列表</a>
+                    <ul id="userDropdown" class="collapse list-unstyled">
+                        <li><a href="user.html">查看用户</a></li>
+                        <li><a href="my_user.html">我关注的用户</a></li>
+                        <li><a href="article.html">发布文章</a></li>
+                        <li><a href="article_collect.html">我的收藏</a></li>
+                    </ul>
+                </li>
+                <!--<li><a href="login.html"> <i class="icon-logout"></i>Login page </a></li>-->
+
+                <li><a href="#depDropdown" data-toggle="collapse" aria-expanded="true"> <i class="icon-windows2"></i>部门列表</a>
+                    <ul id="depDropdown" class="collapse show ">
+                        <li class="active"><a href="department.html">全部部门</a></li>
+                        <li><a href="meeting.html">会议系统</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+        </nav>
+        <!-- Sidebar Navigation end-->
+        <div class="page-content">
+            <div class="page-header">
+                <div class="container-fluid">
+                    <h2 class="h5 no-margin-bottom">全部部门</h2>
+                </div>
+            </div>
+            <section class="no-padding-bottom">
+
+                <div class="list-group subject">
+                    <div class="list-group-item" v-for="dept in deptData">
+                        <!--@click="showUser($event)"-->
+                        <a :href="'#deptDetail'+dept.id" data-toggle="collapse">{{dept.name}}
+                            &nbsp;{{dept.count}}人</a>
+                        <div :id="'deptDetail'+dept.id" class="collapse deptDetail">
+                            <ul>
+                                <li v-for="user in dept.userList">
+                                    <a href="javascript:void (0);" @click="userDetail(user.id)">{{user.username}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <div class="footer__block block no-margin-bottom">
+                    <div class="container-fluid text-center">
+                        <p class="no-margin-bottom">Copyright &copy; 2019.Company <a href="#">东方标准</a></p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+<!-- JavaScript files-->
+<script src="../vendor/jquery/jquery.min.js"></script>
+<script src="../vendor/popper.js/umd/popper.min.js"></script>
+<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="../vendor/jquery.cookie/jquery.cookie.js"></script>
+<script src="../vendor/chart.js/Chart.min.js"></script>
+<script src="../vendor/jquery-validation/jquery.validate.min.js"></script>
+<script src="../js/charts-home.js"></script>
+<script src="../js/front.js"></script>
+<script src="../js/custom.js"></script>
+<script src="../bootstrap/js/bootstrap-collapse.js"></script>
+<script src="../js/layer.js"></script>
+<script src="../js/vue-2.6.11.js"></script>
+<script src="../js/axios-0.19.2.min.js"></script>
+<script src="../js/jquery-cookie-1.4.1.js"></script>
+</body>
+</html>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            //获取登录的用户信息
+            loginUser: JSON.parse(localStorage.getItem("loginUser")),
+            deptData: {}
+        },
+        methods: {
+            //查询部门
+            findAllDept: function () {
+                axios({
+                    url: '/dept/findAllDept'
+                }).then((res) => {
+                    if (res.data.success) {
+                        this.deptData = res.data.obj;
+                    }
+                }).catch((error) => {
+                    layer.msg(error.message)
+                })
+            },
+
+            //显示用户
+            showUser: function (event) {
+                console.log(event);
+                if (event.target.nextSibling.nextSibling.classList == "collapse deptDetail") {
+                    event.target.nextSibling.nextSibling.classList.add('show');
+                } else {
+                    event.target.nextSibling.nextSibling.classList.remove('show')
+                }
+            },
+
+            //查看用户信息
+            userDetail(userId) {
+                // 查询用户是否私密
+                axios.get(`/user/isSecret/${userId}`).then((res) => {
+
+                    if (res.data.success) {
+                        sessionStorage.setItem("userId", userId);
+                        location = "/html/user_detail.html";
+                    } else {
+                        layer.msg(res.data.msg);
+                    }
+                })
+            },
+            //退出登录
+            logout:function () {
+                axios.post("/user/logout").then((res) => {
+                    if (res.data.success){
+                        //清除本地缓存
+                        localStorage.removeItem("userId");
+                        localStorage.removeItem("loginUser");
+                        //清空cookie
+                        $.removeCookie("userId",{path:"/"});
+                        //跳转登录界面
+                        location.href="/index.html";
+                    }
+                })
+            }
+        },
+        created: function () {
+            this.findAllDept();
+        }
+    })
+</script>

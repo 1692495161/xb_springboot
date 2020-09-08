@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xb.mapper.ArticleMapper">
+
+    <select id="findFavoriteList" resultType="com.xb.entity.User" parameterType="map">
+
+            SELECT
+            	u.id,
+            	u.is_secret isSecret,
+            	u.real_name realName
+            FROM
+            	userfocus uf
+            	LEFT JOIN USER u ON u.id = uf.user_focus_id
+            	LEFT JOIN favorite f ON f.u_id = uf.user_focus_id
+            WHERE
+            	uf.user_id = #{userId}
+            	AND f.a_id = #{articleId}
+
+    </select>
+
+</mapper>
+ 

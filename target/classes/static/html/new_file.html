@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<script src="../js/jquery-1.11.1.js"></script>
+	<script src="../js/echarts.min.js"></script>
+	<!-- <script src="../js/charts-home.js"></script> -->
+	<body>
+		<canvas id="lineCahrt" style="width: 500px; height: 300px;margin: 200px auto"></canvas>
+	</body>
+</html>
+
+<script>
+	// 基于准备好的dom，初始化echarts实例
+	var myChart = echarts.init(document.getElementById('lineCahrt'));
+	
+	// 指定图表的配置项和数据
+	option = {
+		// 标题
+		title: {
+			text: '小标数据汇总'
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'cross',
+				label: {
+					backgroundColor: '#aaaaff'
+				}
+			}
+		},
+		// 图表说明
+		legend: {
+			data: ['新增用户', '新增文章', '新开会议']
+		},
+		// 工具栏(图片另存为按钮)
+		toolbox: {
+			feature: {
+				saveAsImage: {}
+			}
+		},
+		// 布局
+		grid: {
+			left: '3%',
+			right: '4%',
+			bottom: '3%',
+			containLabel: true
+		},
+		xAxis: [{
+			type: 'category',
+			boundaryGap: false,
+			data: ["10.21", "10.22", "10.23", "10.24", "10.25", "10.26", "10.27", "10.28", "10.29"]
+		}],
+		yAxis: [{
+			type: 'value'
+		}],
+		series: [{
+				name: '新增用户',
+				type: 'line',
+				stack: '总量',
+				areaStyle: {},
+				data: [3, 5, 7, 4, 6, 2, 6, 3, 4]
+			},
+			{
+				name: '新增文章',
+				type: 'line',
+				stack: '总量',
+				areaStyle: {},
+				data: [15, 10, 12, 14, 12, 9, 10, 11, 8]
+			},
+			{
+				name: '新开会议',
+				type: 'line',
+				stack: '总量',
+				label: {
+					normal: {
+						show: true,
+						position: 'top'
+					}
+				},
+				areaStyle: {},
+				data: [8, 8, 9, 7, 9, 12, 13, 10, 11]
+			}
+		]
+	};
+	
+	
+	// 使用刚指定的配置项和数据显示图表。
+	myChart.setOption(option);
+</script>

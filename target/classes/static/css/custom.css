@@ -1,0 +1,73 @@
+/* your styles go here */
+.avatar{
+    cursor: pointer;
+}
+
+
+.myList li{
+    margin-bottom: 15px;
+    list-style: none;
+    background-color: rgb(45, 48, 53);
+}
+
+.myList a{
+    line-height: 40px;
+    text-decoration: none;
+}
+
+.myList select{
+    margin-left: 15px;
+}
+
+.myTitle{
+    position: relative;
+    margin-left: 50px;
+    margin-bottom: 15px;
+}
+
+
+.myTitle > input{
+    position: absolute;
+    top: 0;
+    right: 25px;
+}
+
+
+
+.myTitle > input{
+    position: absolute;
+    top: 0;
+    right: 25px;
+}
+
+.myList > p{
+    margin: 30px 50px;
+}
+
+.myContent > p{
+    margin-bottom: 20px;
+}
+.isHidden{
+     height: 0px ;
+     overflow: hidden ;
+ }
+
+.myGroup>ul>li{
+    margin:0px;
+}
+
+
+
+.subject div{
+    background-color: rgb(45, 48, 53);
+    text-decoration: none;
+}
+.subject a{
+    line-height: 40px;
+    text-decoration: none;
+}
+
+
+.deptDetail{
+    padding: 0 50px;
+}

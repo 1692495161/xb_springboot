@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/xb
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true    # 格式化sql
+        show_sql: true        # 显示sql
+
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 12345
+
+  jackson:    #前端提交文字字符串转日期格式
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  profiles:  #激活application-login.yml配置文件
+    active: login
+
+mybatis:
+  mapper-locations: classpath:mybatis/*.xml  # mapper文件路径
+  type-aliases-package: com.xb.entity  #实体类路径
+
+#静态资源对外暴露的访问路径,头像的路径映射
+file:
+  requestPath: /upload/**
+  dir: D:/workspace/upload/

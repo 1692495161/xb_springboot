@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script src="../vendor/jquery/jquery.min.js"></script>
+<script src="../vendor/jquery.cookie/jquery.cookie.js"></script>
+<script src="../js/layer.js"></script>
+<script src="../js/vue-2.6.11.js"></script>
+<script src="../js/axios-0.19.2.min.js"></script>
+<script src="../js/jquery-cookie-1.4.1.js"></script>
+<script>
+    new Vue({
+        data: {},
+        methods: {
+            getWxLoginInfo() {
+                axios.post("/getWxLoginInfo").then((res) => {
+                    if (res.data.success) {
+                        $.cookie("userId", res.data.obj.userId, {path: "/", expires: 7})
+                        localStorage.setItem("loginUser", JSON.stringify(res.data.obj.loginUser))
+
+                        // 跳转到首页
+                        location.href='/html/home.html';
+
+                    }else{
+                        layer.msg(res.data.message)
+                    }
+                })
+            }
+        },
+        created() {
+            this.getWxLoginInfo();
+        }
+    })
+</script>
+</body>
+</html>

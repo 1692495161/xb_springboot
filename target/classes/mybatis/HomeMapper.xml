@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xb.mapper.HomeMapper">
+
+    <select id="findHomeCount" resultType="map">
+            /*查询当天新增的用户，文章和会议数*/
+        SELECT
+              (SELECT COUNT(DATE_FORMAT(u.register_time,'%Y-%m-%d')=CURRENT_DATE() OR NULL) FROM `user` u) userCount,
+              (SELECT COUNT(DATE_FORMAT(a.publish_date,'%Y-%m-%d')=CURRENT_DATE() OR NULL) FROM article a  ) articleCount,
+              (SELECT COUNT(1) FROM meeting m WHERE DATE_FORMAT(m.publish_date,'%Y-%m-%d')=CURRENT_DATE() OR NULL) meetingCount
+
+    </select>
+
+    <select id="findHomeDetail" resultType="map">
+       /*查询7天来新增的用户，文章和会议数*/
+              SELECT
+					(SELECT COUNT(DATE_FORMAT(u.register_time,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-6) OR NULL) FROM `user` u ) day7,
+					(SELECT COUNT(DATE_FORMAT(u.register_time,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-5) OR NULL) FROM `user` u ) day6,
+					(SELECT COUNT(DATE_FORMAT(u.register_time,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-4) OR NULL) FROM `user` u ) day5,
+					(SELECT COUNT(DATE_FORMAT(u.register_time,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-3) OR NULL) FROM `user` u ) day4,
+					(SELECT COUNT(DATE_FORMAT(u.register_time,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-2) OR NULL) FROM `user` u ) day3,
+					(SELECT COUNT(DATE_FORMAT(u.register_time,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-1) OR NULL) FROM `user` u ) day2,
+					(SELECT COUNT(DATE_FORMAT(u.register_time,'%Y-%m-%d')=CURRENT_DATE() OR NULL) FROM `user` u ) day1
+
+	          UNION ALL
+
+	          SELECT
+					(SELECT COUNT(DATE_FORMAT(a.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-6) OR NULL) FROM article a ) day7,
+					(SELECT COUNT(DATE_FORMAT(a.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-5) OR NULL) FROM article a ) day6,
+					(SELECT COUNT(DATE_FORMAT(a.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-4) OR NULL) FROM article a ) day5,
+					(SELECT COUNT(DATE_FORMAT(a.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-3) OR NULL) FROM article a ) day4,
+					(SELECT COUNT(DATE_FORMAT(a.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-2) OR NULL) FROM article a ) day3,
+					(SELECT COUNT(DATE_FORMAT(a.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-1) OR NULL) FROM article a ) day2,
+					(SELECT COUNT(DATE_FORMAT(a.publish_date,'%Y-%m-%d')=CURRENT_DATE() OR NULL) FROM article a ) day1
+
+	          UNION ALL
+
+	          SELECT
+					(SELECT COUNT(DATE_FORMAT(m.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-6) OR NULL) FROM meeting m ) day7,
+					(SELECT COUNT(DATE_FORMAT(m.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-5) OR NULL) FROM meeting m ) day6,
+					(SELECT COUNT(DATE_FORMAT(m.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-4) OR NULL) FROM meeting m ) day5,
+					(SELECT COUNT(DATE_FORMAT(m.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-3) OR NULL) FROM meeting m ) day4,
+					(SELECT COUNT(DATE_FORMAT(m.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-2) OR NULL) FROM meeting m ) day3,
+					(SELECT COUNT(DATE_FORMAT(m.publish_date,'%Y-%m-%d')=ADDDATE(CURRENT_DATE(),-1) OR NULL) FROM meeting m ) day2,
+					(SELECT COUNT(DATE_FORMAT(m.publish_date,'%Y-%m-%d')=CURRENT_DATE() OR NULL) FROM meeting m ) day1
+
+    </select>
+
+</mapper>
+ 

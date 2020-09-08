@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Bootstrap CSS-->
+		<link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.css">
+		<!-- Font Awesome CSS-->
+		<link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
+		<!-- Custom Font Icons CSS-->
+		<link rel="stylesheet" href="../css/font.css">
+		<!-- theme stylesheet-->
+		<link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
+		<!-- Custom stylesheet - for your changes-->
+		<link rel="stylesheet" href="../css/custom.css">
+		<link rel="stylesheet" href="../bootstrap/css/bootstrap-select.min.css">
+		<link rel="stylesheet" href="../bootstrap/css/bootstrap-datepicker.min.css">
+		<link rel="stylesheet" href="../bootstrap/css/bootstrap-datetimepicker.css">
+		<title>发布会议</title>
+		<style>
+			/*这个是这页面特有的，需要单独写出来*/
+        .myTitle > input {
+            float: right;
+            margin-left: 15px;
+        }
+
+    </style>
+	</head>
+	<body>
+		<div id="app">
+			<header class="header">
+				<nav class="navbar navbar-expand-lg">
+					<div class="search-panel">
+						<div class="search-inner d-flex align-items-center justify-content-center">
+							<div class="close-btn">Close <i class="fa fa-close"></i></div>
+							<form id="searchForm" action="#">
+								<div class="form-group">
+									<input type="search" name="search" placeholder="What are you searching for...">
+									<button type="submit" class="submit">Search</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="container-fluid d-flex align-items-center justify-content-between">
+						<div class="navbar-header">
+							<!-- Navbar Header--><a href="home.html" class="navbar-brand">
+								<div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">小标</strong><strong>会议平台</strong></div>
+								<div class="brand-text brand-sm"><strong class="text-primary">X</strong><strong>B</strong></div>
+							</a>
+							<!-- Sidebar Toggle Btn-->
+							<button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
+						</div>
+						<div class="right-menu list-inline no-margin-bottom">
+							<!-- Log out -->
+							<div class="list-inline-item logout">
+								<a id="logout" href="javascript:void(0);" @click="logout" class="nav-link"><span class="d-none d-sm-inline">Logout </span></a>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</header>
+
+			<div class="d-flex align-items-stretch">
+				<!-- Sidebar Navigation-->
+				<nav id="sidebar">
+					<!-- Sidebar Header-->
+					<div class="sidebar-header d-flex align-items-center">
+						<div id="avatar" class="avatar"><img :src="loginUser.pic" alt="..."
+															 class="img-fluid rounded-circle"></div>
+						<div class="title">
+							<h1 class="h5">{{loginUser.realName}}</h1>
+							<p>{{loginUser.deptName}}</p>
+						</div>
+					</div>
+					<!-- Sidebar Navidation Menus--><span class="heading">Main</span>
+					<ul class="list-unstyled">
+						<li><a href="home.html"> <i class="icon-home"></i>主页 </a></li>
+						<li><a href="#userDropdown" data-toggle="collapse"> <i class="icon-windows"></i>用户列表</a>
+							<ul id="userDropdown" class="collapse list-unstyled">
+								<li><a href="user.html">查看用户</a></li>
+								<li><a href="my_user.html">我关注的用户</a></li>
+								<li><a href="article.html">发布文章</a></li>
+								<li><a href="article_collect.html">我的收藏</a></li>
+							</ul>
+						</li>
+						<!--<li><a href="login.html"> <i class="icon-logout"></i>Login page </a></li>-->
+
+						<li><a href="#depDropdown" data-toggle="collapse" aria-expanded="true"> <i class="icon-windows2"></i>部门列表</a>
+							<ul id="depDropdown" class="collapse show ">
+								<li><a href="department.html">全部部门</a></li>
+								<li><a href="meeting.html">会议系统</a></li>
+							</ul>
+						</li>
+
+					</ul>
+
+				</nav>
+				<!-- Sidebar Navigation end-->
+				<div class="page-content">
+					<div class="page-header">
+						<div class="container-fluid">
+							<h2 class="h5 no-margin-bottom">发布会议</h2>
+						</div>
+					</div>
+
+					<section class="no-padding-bottom">
+
+						<div class="block-body">
+							<form @submit.prevent>
+								<div class="form-group">
+									<label class="form-control-label">标题</label>
+									<input type="text" v-model="meeting.title" placeholder="会议标题" class="form-control">
+								</div>
+								<!--选择部门-->
+								<div class="form-group">
+									<label class="form-control-label">部门部门：</label>
+									<select class="selectpicker" v-model="meeting.deptId" @change="findUserByDeptId" data-live-search="true">
+										<option v-for="dept in deptList" :value="dept.id">{{dept.name}}</option>
+									</select>
+									<label class="form-control-label">抄送人：</label>
+									<select class="selectpicker" id="users" v-model="meeting.makeUser" data-live-search="true" multiple>
+										<option v-for="user in userList" :value="user.id">{{user.realName}}</option>
+									</select>
+								</div>
+								<!--开始时间-->
+								<div class="form-group">
+									<label class="form-control-label">开始时间</label>
+
+									<input type="datetime-local" v-model="meeting.startTime" step="1" class="form-control" id="startTime" data-date-format="yyyy-mm-dd hh:ii:ss">
+								</div>
+								<!--结束时间-->
+								<div class="form-group">
+									<label class="form-control-label">结束时间</label>
+
+									<input type="datetime-local" step="1" v-model="meeting.endTime" class="form-control" id="endTime" data-date-format="yyyy-mm-dd hh:ii:ss">
+								</div>
+								<div class="form-group">
+									<label class="form-control-label">会议内容</label>
+									<textarea class="form-control" v-model="meeting.content" rows="5"></textarea>
+								</div>
+								<div class="text-center form-group">
+									<input type="submit" @click="submit" value="发布" class="btn btn-primary">
+									<input type="reset" value="清空" class="btn btn-info">
+								</div>
+							</form>
+						</div>
+					</section>
+
+					<footer class="footer">
+						<div class="footer__block block no-margin-bottom">
+							<div class="container-fluid text-center">
+								<p class="no-margin-bottom">Copyright &copy; 2019.Company <a href="#">东方标准</a></p>
+							</div>
+						</div>
+					</footer>
+				</div>
+			</div>
+		</div>
+		<!-- JavaScript files-->
+		<script src="../vendor/jquery/jquery.min.js"></script>
+		<script src="../bootstrap/js/bootstrap-select.min.js"></script>
+		<script src="../bootstrap/js/bootstrap-datepicker.min.js"></script>
+		<script src="../bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="../vendor/popper.js/umd/popper.min.js"></script>
+		<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../vendor/jquery.cookie/jquery.cookie.js"></script>
+		<script src="../vendor/chart.js/Chart.min.js"></script>
+		<script src="../vendor/jquery-validation/jquery.validate.min.js"></script>
+		<script src="../js/charts-home.js"></script>
+		<script src="../js/front.js"></script>
+		<script src="../js/custom.js"></script>
+		<script src="../js/layer.js"></script>
+		<script src="../js/vue-2.6.11.js"></script>
+		<script src="../js/axios-0.19.2.min.js"></script>
+		<script src="../js/jquery-cookie-1.4.1.js"></script>
+		<!--<script>
+			$(function() {
+				$('#startTime').datetimepicker();
+				$('#endTime').datetimepicker();
+				$('#datetimepicker').datetimepicker();
+			})
+		</script>-->
+	</body>
+</html>
+
+<script>
+	new Vue({
+		el:'#app',
+		data:{
+			loginUser: JSON.parse(localStorage.getItem("loginUser")),
+			deptList:{},
+			userList:{},
+			meeting:{
+				makeUser:[]
+			}
+		},
+		methods:{
+			//查询所有的部门
+			findDeptAll:function () {
+				axios.get('/dept').then((res)=>{
+					if (res.data.success){
+						this.deptList=res.data.obj;
+					}
+				})
+			},
+			//根据部门id查询用户
+			findUserByDeptId:function () {
+				axios({
+					url:`/user/findUserByDeptId/${this.meeting.deptId}`,
+				}).then((res)=>{
+					if (res.data.success){
+						this.userList=res.data.obj;
+					}else {
+						layer.msg(res.data.msg)
+					}
+				}).finally((res)=>{
+					//重新刷新下拉框select
+					$("#users").selectpicker('refresh');
+				})
+			},
+			//发布会议
+			submit:function () {
+
+				//将会议抄送人转换为字符串
+				let temp= this.meeting.makeUser;
+				this.meeting.makeUser=temp.toString();
+				// console.log(this.meeting.makeUser);
+
+				//将时间格式转换正确
+				this.meeting.startTime=this.meeting.startTime.replace('T',' ');
+				this.meeting.endTime=this.meeting.endTime.replace('T',' ');
+				/*console.log(this.meeting.startTime);
+				console.log(this.meeting.endTime);*/
+
+				axios({
+					url: '/meeting',
+					data: this.meeting,
+					method: 'post'
+				}).then((res)=>{
+					if (res.data.success){
+						layer.msg(res.data.msg);
+						location.href = "/html/meeting.html";
+					}else {
+						layer.msg(res.data.msg);
+					}
+				})
+			},
+			//退出登录
+			logout:function () {
+				axios.post("/user/logout").then((res) => {
+					if (res.data.success){
+						//清除本地缓存
+						localStorage.removeItem("userId");
+						localStorage.removeItem("loginUser");
+						//清空cookie
+						$.removeCookie("userId",{path:"/"});
+						//跳转登录界面
+						location.href="/index.html";
+					}
+				})
+			}
+		},
+		created:function () {
+			this.findDeptAll();
+		}
+	})
+</script>

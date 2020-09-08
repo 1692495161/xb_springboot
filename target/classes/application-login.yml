@@ -1,0 +1,9 @@
+# 微信登录回调域
+wx:
+  redirect_uri: http://xb.dfbz.com/wx_login
+
+  # 微信应用AppID
+  appId: wx993758d491e2eb6e
+
+  # 微信应用AppSecret
+  appSecret: 2a43377127d85d2ccecf1eccb99c0025
